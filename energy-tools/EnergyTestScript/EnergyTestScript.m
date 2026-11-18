@@ -59,6 +59,7 @@ classdef EnergyTestScript < handle
         benchmarkB
         fileDescription = ''
         matFileNameProcessed
+        matFileFolder = ''
     end
 
     properties (Access = private)
@@ -438,7 +439,9 @@ classdef EnergyTestScript < handle
 
             disp("Measurement: " + idx + " (" + obj.order(idx) + ")")
             % pause
+            fprintf('Pause %d sec...\n',obj.pauseDuration)
             forcePause(obj.pauseDuration)
+            fprintf('Run benchmark...\n')
 
             switch obj.order(idx)
                 case 1
@@ -469,6 +472,7 @@ classdef EnergyTestScript < handle
 
         function saveData(obj,type)
             fileName = ['measurement_',obj.fileDescription,obj.date,'_',type,'.mat'];
+            fileName = fullfile(obj.matFileFolder,fileName);
 
             if strcmp(type,'processed')
                 newVars = {'mean*','ratio*'};

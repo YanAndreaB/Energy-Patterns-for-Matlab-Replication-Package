@@ -15,9 +15,6 @@ end
 
 cd(folderStudy2)
 
-rootFolder = projectRoot;
-cd(folderStudy3)
-
 %% 2. Collect Total Issues
 folders = dir2folderNames(folderMinedProjects)';
 

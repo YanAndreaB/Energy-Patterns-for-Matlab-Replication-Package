@@ -1,6 +1,5 @@
 %% Import data
-reposFolder = 'C:\GitHub'; % put your folder here where you have your git repos
-rootFolder = fullfile(reposFolder,'Energy-Patterns-for-Matlab-Replication-Package');
+rootFolder = fullfile(projectRoot,'Energy-Patterns-for-Matlab-Replication-Package');
 
 cd(fullfile(rootFolder,'Study2'))
 load csv_import.mat rawData

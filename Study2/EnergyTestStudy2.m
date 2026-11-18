@@ -154,14 +154,18 @@ for idx = 1:numel(fileNames)
 
     % add project folder to matlab path
     projectFolder = getProjectFolder(fileName);
+    warning off % to suppress warnings about files shadowing other files
     addpath(genpath(projectFolder))
+    warning on
 
     % find files in static closure
     files = fileOrbit(fileName);
     filesInStaticClosure = [filesInStaticClosure;files]; %#ok<AGROW>
 
     % remove project folder from matlab path
+    warning off
     rmpath(genpath(projectFolder))
+    warning on
 end
 filesInStaticClosure = unique(filesInStaticClosure);
 save(fullfile(folderStudy2,'filesInStaticClosure.mat'),'filesInStaticClosure')
@@ -173,6 +177,7 @@ load(fullfile(folderStudy2,'filesInStaticClosure.mat'),'filesInStaticClosure')
 
 % data about all files in repositories
 data = readtable(diaryName);
+data.File = replace('MinedGithubProjects','OptimizedGithubProjects');
 % intersection of files that exhibit a pattern at all and files in static
 % closure
 [~,ia,~] = intersect(data.File,filesInStaticClosure);

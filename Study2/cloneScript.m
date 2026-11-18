@@ -7,7 +7,7 @@ githubUserName = rawData.githubUserName;
 repoName = rawData.repoName;
 
 %% Clone repositories
-cd(rootFolder,'MinedGithubProjects')
+cd(fullfile(rootFolder,'MinedGithubProjects'))
 urlFun = @(name)fullfile('https://github.com/',char(name));
 failedRepos = [];
 for idx = 1:height(rawData)

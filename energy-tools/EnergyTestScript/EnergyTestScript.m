@@ -371,12 +371,14 @@ classdef EnergyTestScript < handle
             [~,obj.listOfGovernors] = system('cat /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor');
         end
 
-        function setGovernors(obj,governor)
+        function setGovernors(~,governor)
             switch computer
                 case 'PCWIN64'
                     % do nothing
                 otherwise % linux
-                    system([fullfile(obj.gitLabFolder,'cpu-frequency-voltage-experiments','resetGovernor.sh'),' ',governor]);
+                    for idx = 0:7
+                        system(sprintf('sudo cpufreq-set -c %d -g %s',idx,governor));
+                    end
             end
         end
 

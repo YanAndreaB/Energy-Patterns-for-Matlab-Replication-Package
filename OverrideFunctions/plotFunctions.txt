@@ -1,0 +1,60 @@
+
+I need a list of matlab functions that can will create a figure when
+called.
+ Copilot
+Here are common MATLAB functions that create a figure (or a figure-like
+window) when called. Categorized for clarity.
+
+Explicit figure creators
+
+
+uifigure
+plotyy
+yyaxis
+surf
+mesh
+meshc
+surfc
+surfl
+imagesc
+imshow
+imshowpair
+pcolor
+contour
+contourf
+bar
+barh
+bar3
+histogram
+pie
+pie3
+scatter
+scatter3
+area
+stairs
+stem
+polarplot
+rose
+quiver
+quiver3
+trisurf
+waterfall
+heatmap
+geoplot
+geoscatter
+geobubble
+geoshow
+worldmap
+usamap
+stackedplot
+parallelplot
+comet
+comet3
+uilistbox
+uibutton
+uitable
+uieditfield
+uislider
+uicheckbox
+uidropdown
+uiradiobutton

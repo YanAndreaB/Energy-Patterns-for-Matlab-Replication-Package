@@ -455,7 +455,7 @@ classdef EnergyTestScript < handle
                     obj.benchmarkA(); % measurement
                     [obj.time1(obj.count1),obj.energy1Brutto(obj.count1),obj.dramEnergy1Brutto(obj.count1)] = obj.stopMeasurement(t1);
  
-                    obj.cleanUpA()
+                    obj.cleanUpA();
                     obj.count1 = obj.count1 + 1;
                 case 2
                     obj.prepareB();
@@ -465,7 +465,7 @@ classdef EnergyTestScript < handle
                     obj.benchmarkB(); % measurement
                     [obj.time2(obj.count2),obj.energy2Brutto(obj.count2),obj.dramEnergy2Brutto(obj.count2)] = obj.stopMeasurement(t1);
 
-                    obj.cleanUpB()
+                    obj.cleanUpB();
                     obj.count2 = obj.count2 + 1;
             end
 

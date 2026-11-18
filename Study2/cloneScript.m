@@ -1,5 +1,5 @@
 %% Import data
-rootFolder = fullfile(projectRoot,'Energy-Patterns-for-Matlab-Replication-Package');
+rootFolder = projectRoot;
 
 cd(fullfile(rootFolder,'Study2'))
 load csv_import.mat rawData

@@ -10,6 +10,15 @@ pathToGeneralMatlabFiles = fullfile(rootFolder,'matlab-tools');
 folderMatfiles = fullfile(rootFolder,'MatFiles');
 folderHelpfunctions = fullfile(rootFolder,'HelpFunctions');
 
+folderGithubProjects = fullfile(rootFolder,'GithubProjects');
+if ~isfolder(folderGithubProjects)
+    mkdir(folderGithubProjects)
+end
+folderMinedProjects = fullfile(folderGithubProjects,'MinedGithubProjects');
+if ~isfolder(folderMinedProjects)
+    mkdir(folderMinedProjects)
+end
+
 % restore default path
 restoredefaultpath
 

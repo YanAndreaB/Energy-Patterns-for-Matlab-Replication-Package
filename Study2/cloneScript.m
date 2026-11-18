@@ -1,5 +1,6 @@
 %% Import data
 rootFolder = projectRoot;
+folderMinedProjects = fullfile(rootFolder,'GithubProjects','MinedGithubProjects');
 
 cd(fullfile(rootFolder,'Study2'))
 load csv_import.mat rawData
@@ -7,11 +8,7 @@ githubUserName = rawData.githubUserName;
 repoName = rawData.repoName;
 
 %% Clone repositories
-folder = fullfile(rootFolder,'MinedGithubProjects');
-if ~isfolder(folder)
-    mkdir(folder)
-end
-cd(folder)
+cd(folderMinedProjects)
 urlFun = @(name)fullfile('https://github.com/',char(name));
 failedRepos = [];
 for idx = 1:height(rawData)

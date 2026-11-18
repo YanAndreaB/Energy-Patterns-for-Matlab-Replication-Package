@@ -7,6 +7,10 @@ folderStudy2 = fullfile(rootFolder,'Study2');
 folderStudy3 = fullfile(rootFolder,'Study3');
 folderGithubProjects = fullfile(rootFolder,'GithubProjects');
 folderMinedProjects = fullfile(folderGithubProjects,'MinedGithubProjects');
+diaryFolder = fullfile(folderStudy2,'diaries');
+if ~isfolder(diaryFolder)
+    mkdir(diaryFolder)
+end
 
 cd(folderStudy2)
 
@@ -14,7 +18,6 @@ cd(folderStudy2)
 % The file diaryAllWarnings.txt is used to store all instances of code
 % analyzer warnings found in the files
 
-diaryFolder = fullfile(folderStudy2,'diaries');
 diaryName = fullfile(diaryFolder,'diaryAllWarnings.txt');
 % check-ids
 [~,warningId] = patternInfo;

@@ -177,7 +177,7 @@ load(fullfile(folderStudy2,'filesInStaticClosure.mat'),'filesInStaticClosure')
 
 % data about all files in repositories
 data = readtable(diaryName);
-data.File = replace('MinedGithubProjects','OptimizedGithubProjects');
+data.File = replace(data.File,'MinedGithubProjects','OptimizedGithubProjects');
 % intersection of files that exhibit a pattern at all and files in static
 % closure
 [~,ia,~] = intersect(data.File,filesInStaticClosure);

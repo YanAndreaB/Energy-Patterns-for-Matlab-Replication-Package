@@ -185,7 +185,6 @@ dataStaticClosure = data(ia,:);
 
 %% 10. Statistics of Static Closure
 [patternNames,warningId,msg] = patternInfo;
-fileNames = mFilesInFolder(filesInStaticClosure);
 
 % loop over check-ids
 for idx = 1:numel(warningId)

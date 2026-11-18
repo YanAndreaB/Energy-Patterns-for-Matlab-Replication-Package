@@ -7,6 +7,7 @@ folderStudy2 = fullfile(rootFolder,'Study2');
 folderStudy3 = fullfile(rootFolder,'Study3');
 folderGithubProjects = fullfile(rootFolder,'GithubProjects');
 folderMinedProjects = fullfile(folderGithubProjects,'MinedGithubProjects');
+folderOptimizedProjects = fullfile(folderGithubProjects,'OptimizedGithubProjects');
 diaryFolder = fullfile(folderStudy2,'diaries');
 if ~isfolder(diaryFolder)
     mkdir(diaryFolder)
@@ -14,7 +15,82 @@ end
 
 cd(folderStudy2)
 
-%% 2. Find patterns with checkcode
+rootFolder = projectRoot;
+cd(folderStudy3)
+
+%% 2. Collect Total Issues
+folders = dir2folderNames(folderMinedProjects)';
+
+numFolders = numel(folders);
+totalIssues = table;
+for idx = 1:numFolders
+    folderPath = fullfile(folderMinedProjects, folders{idx});
+    summary = codeIssues(folderPath);
+    % get non-suppressed issues
+    tmpIssues = summary.Issues;
+    tmpIssues.isSuppressed = false(size(tmpIssues,1),1);
+    % get suppressed issues
+    tmpSuppressedIssues = summary.SuppressedIssues;
+    tmpSuppressedIssues = removevars(tmpSuppressedIssues,'Suppression');
+    tmpSuppressedIssues.isSuppressed = true(size(tmpSuppressedIssues,1),1);
+
+    % concatenate
+    totalIssues = [totalIssues;tmpIssues;tmpSuppressedIssues]; %#ok<AGROW>
+end
+
+%% 3. Get Fixable Issues
+autoFixCheckIds = { ...
+    'AND2', ...
+    'CCAT', ...
+    'FNDSB', ...
+    'ISCL', ...
+    'OR2', ...
+    };
+
+manualFixCheckIds = { ...
+    'ST2NM', ...
+    'GFLD', ...
+    'AGROW', ...
+    'SAGROW', ...
+    'EXIST', ...
+    };
+
+checkIds = [autoFixCheckIds,manualFixCheckIds];
+% Filter totalIssues based on checkIds
+fixableIssues = totalIssues(ismember(totalIssues.CheckID, checkIds), :);
+save(fullfile(folderStudy3,'issues.mat'),'fixableIssues')
+
+%% 4. Replace %#ok Annotations
+% This step is to unsuppress code analyzer warnings.
+
+cd(fullfile(folderMinedProjects))
+
+fileNames = mFilesInPwd;
+str1 = '%#ok';
+str2 = '% #ok';
+counter = 0;
+for idx = 1:numel(fileNames)
+    fileID = fopen(fileNames{idx},'r');
+    res = fscanf(fileID,'%c');
+    fclose(fileID);
+
+    if count(res,str1) > 0
+        counter = counter + 1;
+        res = replace(res,str1,str2);
+        fileID = fopen(fileNames{idx},'w');
+        fwrite(fileID,res);
+        fclose(fileID);
+    end
+end
+
+%% 5. Copy files to folder OptimizedGithubProjects
+cd(folderGithubProjects)
+copyfile('MinedGithubProjects','OptimizedGithubProjects')
+
+% This step might alternatively be done manually in Linux shell:
+% cp MinedGithubProjects OptimizedGithubProjects
+
+%% 6. Find patterns with checkcode
 % The file diaryAllWarnings.txt is used to store all instances of code
 % analyzer warnings found in the files
 
@@ -49,7 +125,7 @@ end
 % close the diary file
 fclose(fileID);
 
-%% 3. Pattern Statistics
+%% 7. Pattern Statistics
 diaryFolder = fullfile(folderStudy2,'diaries');
 diaryName = fullfile(diaryFolder,'diaryAllWarnings.txt');
 % read data from diary file
@@ -68,12 +144,12 @@ totalNumFiles = numel(fileNames);
 % aggregated statistics table
 statTable = PatternStatisticsTable(sort(stats,1,'descend'),totalNumFiles);
 
-%% 4. Files in Static Closure
+%% 8. Files in Static Closure
 
 % load files
 load(fullfile(folderStudy3,'filesStudy3.mat'),'filesStudy3')
 
-fileNames = filesStudy3.fileName;
+fileNames = fullfile(folderOptimizedProjects,filesStudy3.fileName);
 filesInStaticClosure = {};
 % loop over files
 for idx = 1:numel(fileNames)
@@ -93,7 +169,7 @@ end
 filesInStaticClosure = unique(filesInStaticClosure);
 save(fullfile(folderStudy2,'filesInStaticClosure.mat'),'filesInStaticClosure')
 
-%% 5. Warnings in Static Closure
+%% 9. Warnings in Static Closure
 
 % load files
 load(fullfile(folderStudy2,'filesInStaticClosure.mat'),'filesInStaticClosure')
@@ -105,7 +181,7 @@ data = readtable(diaryName);
 [~,ia,~] = intersect(data.File,filesInStaticClosure);
 dataStaticClosure = data(ia,:);
 
-%% 6. Statistics of Static Closure
+%% 10. Statistics of Static Closure
 [patternNames,warningId,msg] = patternInfo;
 fileNames = mFilesInFolder(filesInStaticClosure);
 

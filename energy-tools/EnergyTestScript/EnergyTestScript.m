@@ -93,10 +93,13 @@ classdef EnergyTestScript < handle
         ratios_e
         ratios_t
         hasOverflown
+        numCpuKernels
     end
 
     methods
         function obj = EnergyTestScript
+            [~,res] = system('cat /proc/cpuinfo | grep processor | wc -l');
+            obj.numCpuKernels = str2double(strtrim(res));
         end
     end
 
@@ -372,12 +375,12 @@ classdef EnergyTestScript < handle
             [~,obj.listOfGovernors] = system('cat /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor');
         end
 
-        function setGovernors(~,governor)
+        function setGovernors(obj,governor)
             switch computer
                 case 'PCWIN64'
                     % do nothing
                 otherwise % linux
-                    for idx = 0:7
+                    for idx = 0:obj.numCpuKernels - 1
                         system(sprintf('sudo cpufreq-set -c %d -g %s',idx,governor));
                     end
             end

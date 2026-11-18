@@ -104,7 +104,9 @@ for idx = startIdx:endIdx
     end
     EFO = EnergyFileOptimizer(files{idx});
     try
+        warning off % to suppress warnings about syntax errors
         fileOptimized = EFO.optimize;
+        warning on
     catch err
         fileOptimized = false;
         failedFiles = [failedFiles; files{idx}]; %#ok<AGROW>

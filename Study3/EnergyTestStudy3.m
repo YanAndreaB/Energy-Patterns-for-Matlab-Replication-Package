@@ -226,15 +226,28 @@ end
 % clean up running project folder
 cleanUpRunningProject(folderGithubProjects)
 
+%% Run script Study3CollectIssues
+Study3CollectIssues
+
 %% 6. Save table as CSV
 energyContentRow = '%d %s %s %s %0.2fJ %0.2fJ %0.2f%%';
 timeContentRow = '%d %s %s %s %0.2fs %0.2fs %0.2f%%';
+
+load(fullfile(folderStudy3,'collectedIssues.mat'),'data');
+patternCount = {data.PatternCount}';
+checkId = {data.DetectedPatterns}';
+IDX = cellfun(@ischar,checkId);
+checkId(IDX) = cellfun(@(arg){arg},checkId(IDX),'UniformOutput',false);
+checkId = cellfun(@(outerArg1,outerArg2)strjoin(sort( ...
+    cellfun(@(arg,arg2)[arg,'~(',num2str(arg2),')'],outerArg1,num2cell(outerArg2),'UniformOutput',false)),', '), ...
+    checkId, patternCount, 'UniformOutput',false);
+
 newTable = cell(2 * height(filesStudy3),7);
 for idx = 1:height(filesStudy3)
     res = dir(fullfile(folderNames{idx},'*processed.mat'));
     fileName = fullfile(res.folder,res.name);
     loadRes = load(fileName,'mean*_b','mean*_t','ratio_b','ratio_t');
-    energyRow = sprintf(energyContentRow,idx,fileNames{idx},projectNames{idx},'check-id', loadRes.mean1_b,loadRes.mean2_b,(1 - loadRes.ratio_b) * 100);
+    energyRow = sprintf(energyContentRow,idx,fileNames{idx},projectNames{idx},checkId{idx}, loadRes.mean1_b,loadRes.mean2_b,(1 - loadRes.ratio_b) * 100);
     timeRow = sprintf(timeContentRow,idx,fileNames{idx},projectNames{idx},'check-id', loadRes.mean1_t,loadRes.mean2_t,(1 - loadRes.ratio_t) * 100);
     newTable(2 * idx - 1,:) = split(energyRow,' ');
     newTable(2 * idx,:) = split(timeRow,' ');

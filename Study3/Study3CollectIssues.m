@@ -71,6 +71,8 @@ for idx = 1:numFiles
     data(idx).PatternCount = histcounts(checkIds);
 end
 
+save(fullfile(folderStudy3,'collectedIssues.mat'),'data')
+
 %% Local functions
 
 function [successful,issues] = getIssues(folder,functionName,patternIds)

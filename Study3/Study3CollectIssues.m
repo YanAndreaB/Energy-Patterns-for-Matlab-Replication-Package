@@ -18,17 +18,10 @@ functionNames = regexp(filesStudy3.fileName,'(?<=/)[^/]*(?=\.m)','match','once')
 %% 2. collect issues
 [~,patternIds] = patternInfo;
 numFiles = height(filesStudy3);
-data = struct('Nr',[],'Successful',[],'Valid',true,'Matfile',[],'GithubUser',[],'Project',[], ...
-    'File',[],'DetectedPatterns',[],'PatternCount',[]);
+data = struct('Successful',[], 'File',[],'DetectedPatterns',[],'PatternCount',[]);
 data = repmat(data,numFiles,1);
 for idx = 1:numFiles
     fprintf('idx: %d\n',idx)
-    % matfileName = viewer.matfilesSignificantResults{idx};
-    % matfileName = regexp(matfileName,'measurement_.*','once','match');
-    % fileName = filesStudy3.fileName{idx};
-    % nameParts = split(fileName,'__');
-    % githubUser = nameParts{1};
-    % project = nameParts{2};
     functionName = functionNames{idx};
     folder = folderNames{idx};
 
@@ -72,25 +65,11 @@ for idx = 1:numFiles
     end
 
     % fill data into struct
-    data(idx).Nr = idx;
     data(idx).Successful = all(successful);
-    % data(idx).Matfile = matfileName;
-    % data(idx).GithubUser = githubUser;
-    % data(idx).Project = project;
     data(idx).File = functionName;
     data(idx).DetectedPatterns = foundIssues;
     data(idx).PatternCount = histcounts(checkIds);
 end
-
-cd(rootFolder)
-
-% create json string
-str = jsonencode(data);
-expr = '("(Nr|Successful|Valid|Matfile|GithubUser|Project|File|DetectedPatterns|PatternCount)")';
-str = regexprep(str,expr,[newline,'$1']);
-str = replace(str,'},{',[newline,'},',newline,'{']);
-str = replace(str,{'[{','}]'},{['[',newline,'{'],['}',newline,']']});
-clipboard("copy",str)
 
 %% Local functions
 

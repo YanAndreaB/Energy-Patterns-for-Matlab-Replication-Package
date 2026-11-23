@@ -1,7 +1,16 @@
 
+Study2/diaries
+GithubProjects
+
 # auto-save files
 *.asv
 
 # help files for Matlab project
 resources
 ReplicationPackage.prj
+
+# mat-files
+*.mat
+
+# csv-files
+*.csv

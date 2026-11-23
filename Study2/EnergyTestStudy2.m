@@ -12,6 +12,8 @@ diaryFolder = fullfile(folderStudy2,'diaries');
 if ~isfolder(diaryFolder)
     mkdir(diaryFolder)
 end
+variableNames = {'Check-ID','Code-Snippet','Num_Files','Fraction','Recommendations', ...
+    'Recommendation_Instances_per_File'};
 
 cd(folderStudy2)
 
@@ -141,6 +143,11 @@ totalNumFiles = numel(fileNames);
 % aggregated statistics table
 statTable = PatternStatisticsTable(sort(stats,1,'descend'),totalNumFiles);
 
+statTable.table.Properties.VariableNames = variableNames;
+
+cd(folderStudy2)
+writetable(statTable.table,'Results_Study_2_Table_A.csv')
+
 %% 8. Files in Static Closure
 
 % load files
@@ -195,3 +202,8 @@ end
 % pattern statistics table for selected projects
 totalNumFilesStaticClosure = numel(filesInStaticClosure);
 statTableStaticClosure = PatternStatisticsTable(sort(statsStaticClosure,1,'descend'),totalNumFilesStaticClosure);
+
+statTableStaticClosure.table.Properties.VariableNames = variableNames;
+
+cd(folderStudy2)
+writetable(statTableStaticClosure.table,'Results_Study_2_Table_B.csv')

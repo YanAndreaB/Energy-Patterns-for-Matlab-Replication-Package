@@ -36,4 +36,30 @@ for idx = 1:numel(folderNames)
     end
 end
 
-cd(currentPath)
+%% 4. Create Table
+
+cd(folderStudy1)
+
+% search sub-folders of folderStudy1 for mat-files beginning with
+% 'measurement' and ending on 'processed'
+
+res = dir('**/*measurement*processed.mat');
+fullNames = arrayfun(@(arg)fullfile(arg.folder,arg.name),res,'UniformOutput',false);
+patterns = replace(fullNames,folderStudy1,'');
+patterns = regexp(patterns,['(?<=\',filesep,').*?(?=\',filesep,')'],'match','once');
+rowNames = {'Check-ID','Non-fixed Recommendation','Fixed Recommendation', ...
+    'Energy (Time) Gain','Significance','p-Value'};
+order = [6,4,1,9,3,5,2,8,7];
+fullNames = fullNames(order);
+patterns = patterns(order);
+
+infoTable = cell(2 * numel(patterns),numel(rowNames));
+for idx = 1:numel(patterns)
+    row = TableRow(patterns{idx},fullNames{idx});
+    infoTable(2 * idx - 1,:) = split(row.string1,' ')';
+    infoTable(2 * idx,:) = split(row.string2,' ')';
+end
+infoTable = cell2table(infoTable);
+infoTable.Properties.VariableNames = rowNames;
+
+writetable(infoTable,'Results_Study_1.csv')

@@ -12,6 +12,17 @@ folderGithubProjects = fullfile(rootFolder,'GithubProjects');
 folderMinedProjects = fullfile(folderGithubProjects,'MinedGithubProjects');
 folderOptimizedProjects = fullfile(folderGithubProjects,'OptimizedGithubProjects');
 
+load(fullfile(folderStudy3,'filesStudy3.mat'),'filesStudy3')
+projectNames = regexp(filesStudy3.fileName,'(?<=__).*?(?=/)','match','once');
+fileNames = regexp(filesStudy3.fileName,'(?<=/)[^/]*(?=$)','match','once');
+folderNames = cell(size(projectNames));
+for idx = 1:numel(projectNames)
+    folderNames{idx} = [num2str(idx),'_',projectNames{idx}];
+    if ~isfolder(folderNames{idx})
+        mkdir(folderNames{idx})
+    end
+end
+
 autoFixCheckIds = { ...
     'AND2', ...
     'CCAT', ...
@@ -203,7 +214,7 @@ for idx = 1:height(files)
     TestingClass.benchmarkB = @()runFile(optimizedShortName,numRuns);
 
     TestingClass.fileDescription = fileDescription;
-    TestingClass.matFileFolder = rootFolder;
+    TestingClass.matFileFolder = fullfile(folderStudy3,folderNames{idx});
     try
         TestingClass.execute
     catch err
@@ -215,14 +226,31 @@ end
 % clean up running project folder
 cleanUpRunningProject(folderGithubProjects)
 
-%% 6. a) Count number of script files (preparation)
+%% 6. Save table as CSV
+energyContentRow = '%d %s %s %s %0.2fJ %0.2fJ %0.2f%%';
+timeContentRow = '%d %s %s %s %0.2fs %0.2fs %0.2f%%';
+newTable = cell(2 * height(filesStudy3),7);
+for idx = 1:height(filesStudy3)
+    res = dir(fullfile(folderNames{idx},'*processed.mat'));
+    fileName = fullfile(res.folder,res.name);
+    loadRes = load(fileName,'mean*_b','mean*_t','ratio_b','ratio_t');
+    energyRow = sprintf(energyContentRow,idx,fileNames{idx},projectNames{idx},'check-id', loadRes.mean1_b,loadRes.mean2_b,(1 - loadRes.ratio_b) * 100);
+    timeRow = sprintf(timeContentRow,idx,fileNames{idx},projectNames{idx},'check-id', loadRes.mean1_t,loadRes.mean2_t,(1 - loadRes.ratio_t) * 100);
+    newTable(2 * idx - 1,:) = split(energyRow,' ');
+    newTable(2 * idx,:) = split(timeRow,' ');
+end
+newTable = cell2table(newTable);
+newTable.Properties.VariableNames = {'Row-Num','File_Name','Project_Name','Check-ID','Non-fixed_Recommendation','Fixed_Recommendation','Gain/Loss'};
+writetable(newTable,'ResultsStudy3.csv')
+
+%% 7. a) Count number of script files (preparation)
 load filesInStaticClosure.mat fileNames
 
 cd(folderMinedProjects)
 files = mFilesInPwd;
 filesInClosure = replace(fileNames,'OptimizedGithubProjects','MinedGithubProjects');
 
-%% 6. b) Count number of script files
+%% 7. b) Count number of script files
 counter = 0;
 counterInClosure = 0;
 for idx = 1:numel(files)
@@ -241,7 +269,7 @@ for idx = 1:numel(files)
     end
 end
 
-%% 7. Count number of lines of code
+%% 8. Count number of lines of code
 numLines = 0;
 numLinesInClosure = 0;
 for idx = 1:numel(files)

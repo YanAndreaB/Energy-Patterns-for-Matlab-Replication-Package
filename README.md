@@ -9,8 +9,10 @@ Pooja Rani; Timo Kehrer
 - Edit `StartScript.m` so that you assign your path where you
 store your GitHub-projects to the variable `reposFolder`.
 All paths needed are derived from this path.
-- Run `StartScript.m`. This sets some variables and adds locations
-used later to the Matlab path.
+- Run `StartScript.m`.
+    - This sets some variables,
+    - adds locations used later to the Matlab path,
+    - creates folders needed later.
 - Scripts can be run section wise by pressing "Run Section"
 in the Matlab editor.
 

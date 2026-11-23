@@ -35,10 +35,10 @@ classdef PatternStatisticsTable
 
             obj.table.names = obj.names;
             obj.table.snippets = obj.snippets;
-            obj.table.numPatterns = obj.numPatterns;
             obj.table.numFiles = obj.numFiles;
-            obj.table.patternsPerFile = obj.patternsPerFile;
             obj.table.numFilesPercentage = obj.numFilesPercentage;
+            obj.table.numPatterns = obj.numPatterns;
+            obj.table.patternsPerFile = obj.patternsPerFile;
             obj.table = sortrows(obj.table,'numPatterns','descend');
         end
 

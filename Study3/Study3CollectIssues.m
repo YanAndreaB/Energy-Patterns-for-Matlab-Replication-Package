@@ -9,7 +9,7 @@ cd(folderStudy3)
 
 addpath(genpath(fullfile(rootFolder,'OverrideFunctions')))
 
-projectFolder = 'GitHubProjects';
+projectFolder = 'GithubProjects';
 load(fullfile(folderStudy3,'filesStudy3.mat'),'filesStudy3')
 projectNames = regexp(filesStudy3.fileName,'(?<=__).*?(?=/)','match','once');
 folderNames = regexp(filesStudy3.fileName,'.*?(?=/)','match','once');

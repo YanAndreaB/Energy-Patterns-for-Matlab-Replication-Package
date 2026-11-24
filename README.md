@@ -18,12 +18,14 @@ in the Matlab editor.
 
 ### Study I
 
+- Type `addpath Study1` into the command window.
 - Run the script `EnergyTestStudy1.m`
 This is to replicate the results shown in the paper in section
 III.A: Study I: *Elementary Performance-oriented Coding Recommendations.*
 
 ### Study II
 
+- Type `addpath Study2` into the command window.
 - Run the script `cloneScript.m`.
 This will clone the used repositories from GitHub.
 - Run the script `EnergyTestStudy2.m`
@@ -32,6 +34,7 @@ III.B: Study II: *Repository Prevalence Analysis*.
 
 ### Study III
 
+- Type `addpath Study3` into the command window.
 - Run the script `EnergyTestStudy3.m`
 This is to replicate the results shown in the paper in section
 III.C: Study III: *Real-World Impact Evaluation*.

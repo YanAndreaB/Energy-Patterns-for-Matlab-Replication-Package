@@ -25,6 +25,7 @@ III.A: Study I: *Elementary Performance-oriented Coding Recommendations.*
 
 ### Study II
 
+- Type `rmpath Study1` into the command window.
 - Type `addpath Study2` into the command window.
 - Run the script `cloneScript.m`.
 This will clone the used repositories from GitHub.
@@ -34,6 +35,7 @@ III.B: Study II: *Repository Prevalence Analysis*.
 
 ### Study III
 
+- Type `rmpath Study2` into the command window.
 - Type `addpath Study3` into the command window.
 - Run the script `EnergyTestStudy3.m`
 This is to replicate the results shown in the paper in section

@@ -1,6 +1,8 @@
 %% EnergyTestStudy1
 
 %% 1. Set Folders
+disp 'Set Folders'
+
 rootFolder = projectRoot;
 folderStudy1 = fullfile(rootFolder,'Study1');
 
@@ -8,6 +10,8 @@ currentPath = pwd;
 cd(folderStudy1)
 
 %% 2. Initialize variables
+disp 'Initialize Variables'
+
 failedMeasurements = [];
 folderNames = {
     'AGROW_SAGROW'
@@ -23,6 +27,7 @@ folderNames = {
 folderNames = cellfun(@(arg)fullfile(folderStudy1,arg),folderNames,'UniformOutput',false);
 
 %% 3. Run experiments
+disp 'Run experiments'
 
 for idx = 1:numel(folderNames)
     cd(folderNames{idx})
@@ -37,6 +42,7 @@ for idx = 1:numel(folderNames)
 end
 
 %% 4. Create Table
+disp 'Create Table'
 
 cd(folderStudy1)
 

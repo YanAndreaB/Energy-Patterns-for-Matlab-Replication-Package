@@ -1,6 +1,8 @@
 %% EnergyTestStudy3
 
 %% 1. Set Folders
+disp 'Set Folders'
+
 rootFolder = projectRoot;
 folderStudy3 = fullfile(rootFolder,'Study3');
 cd(folderStudy3)
@@ -39,6 +41,7 @@ autoFixCheckIds = { ...
 % For the next run oldProjectList gets the values of projectList and the
 % iteration is proceeded until the array projectList hasn't "shrunk" after
 % the run.
+disp 'Optimize Files with Autofix option'
 
 cd(folderOptimizedProjects)
 
@@ -64,6 +67,7 @@ save(fullfile(folderStudy3,'issues.mat'),'projectList','-append')
 % For some unknonw reason not all autofixable issues have been fixed under
 % step 5. To make sure that no auto-fixable issue remains, loop again
 % through projects that have unsolved issues.
+disp 'Loop through projects that have not been optimized in 5'
 
 cd(folderOptimizedProjects)
 
@@ -95,6 +99,7 @@ end
 %% 3. a) Optimize Files (Preparation)
 % This step is to optimize files with self-crafted automated fixes - with
 % the utility EnergyFileOptimizer.m
+disp 'Optimize Files (Preparation)'
 
 cd(folderOptimizedProjects)
 
@@ -106,6 +111,8 @@ fileList = [];
 failedFiles = {};
 
 %% 3.b) Optimize Files
+disp 'Optimize Files'
+
 for idx = startIdx:endIdx
 
     % It might take about 3 hours for 1015 repos
@@ -131,6 +138,8 @@ end
 optimizedFilesList = files(fileList);
 
 %% 4. Run files to estimate running time
+disp 'Run files to estimate running time'
+
 load(fullfile(folderStudy3,'filesStudy3.mat'),'filesStudy3')
 files = fullfile(folderOptimizedProjects,filesStudy3.fileName);
 for idx = 1:numel(files)
@@ -146,6 +155,8 @@ end
 save(fullfile(folderStudy3,'filesStudy3.mat'),'filesStudy3')
 
 %% 5. a) Run Energy Experiments (preparation)
+disp 'Run Energy Experiments (preparation)'
+
 runningProjectFolder = fullfile(folderGithubProjects,'RunningProject');
 if ~isfolder(runningProjectFolder)
     mkdir(runningProjectFolder)
@@ -165,6 +176,8 @@ erroringProjects = [];
 errorMessages = {};
 
 %% 5. b) Loop through files
+disp 'Loop through files'
+
 for idx = 1:height(files)
     % restore default path
     restoredefaultpath
@@ -227,9 +240,13 @@ end
 cleanUpRunningProject(folderGithubProjects)
 
 %% Run script Study3CollectIssues
+disp 'Run script Study3CollectIssues'
+
 Study3CollectIssues
 
 %% 6. Save table as CSV
+disp 'Save table as CSV'
+
 energyContentRow = '%d %s %s %s %0.2fJ %0.2fJ %0.2f%%';
 timeContentRow = '%d %s %s %s %0.2fs %0.2fs %0.2f%%';
 
@@ -256,49 +273,49 @@ newTable = cell2table(newTable);
 newTable.Properties.VariableNames = {'Row-Num','File_Name','Project_Name','Check-ID','Non-fixed_Recommendation','Fixed_Recommendation','Gain/Loss'};
 writetable(newTable,'ResultsStudy3.csv')
 
-%% 7. a) Count number of script files (preparation)
-load filesInStaticClosure.mat fileNames
-
-cd(folderMinedProjects)
-files = mFilesInPwd;
-filesInClosure = replace(fileNames,'OptimizedGithubProjects','MinedGithubProjects');
-
-%% 7. b) Count number of script files
-counter = 0;
-counterInClosure = 0;
-for idx = 1:numel(files)
-    if mod(idx,1000) == 0
-        fprintf('%d\n',idx)
-    end
-    tree = mtree(files{idx},'-file');
-    if ~tree.isempty
-        kind = tree.root.kind;
-        if ~strcmp(kind,'FUNCTION')
-            counter = counter + 1;
-            if ismember(files{idx},filesInClosure)
-                counterInClosure = counterInClosure + 1;
-            end
-        end
-    end
-end
-
-%% 8. Count number of lines of code
-numLines = 0;
-numLinesInClosure = 0;
-for idx = 1:numel(files)
-    if mod(idx,1000) == 0
-        fprintf('%d\n',idx)
-    end
-    tree = mtree(files{idx},'-file');
-    if ~tree.isempty
-        str = tree.tree2str;
-        newNumLines = numel(regexp(str,newline));
-        numLines = numLines + newNumLines;
-        if ismember(files{idx},filesInClosure)
-            numLinesInClosure = numLinesInClosure + newNumLines;
-        end
-    end
-end
+% %% 7. a) Count number of script files (preparation)
+% load filesInStaticClosure.mat fileNames
+% 
+% cd(folderMinedProjects)
+% files = mFilesInPwd;
+% filesInClosure = replace(fileNames,'OptimizedGithubProjects','MinedGithubProjects');
+% 
+% %% 7. b) Count number of script files
+% counter = 0;
+% counterInClosure = 0;
+% for idx = 1:numel(files)
+%     if mod(idx,1000) == 0
+%         fprintf('%d\n',idx)
+%     end
+%     tree = mtree(files{idx},'-file');
+%     if ~tree.isempty
+%         kind = tree.root.kind;
+%         if ~strcmp(kind,'FUNCTION')
+%             counter = counter + 1;
+%             if ismember(files{idx},filesInClosure)
+%                 counterInClosure = counterInClosure + 1;
+%             end
+%         end
+%     end
+% end
+% 
+% %% 8. Count number of lines of code
+% numLines = 0;
+% numLinesInClosure = 0;
+% for idx = 1:numel(files)
+%     if mod(idx,1000) == 0
+%         fprintf('%d\n',idx)
+%     end
+%     tree = mtree(files{idx},'-file');
+%     if ~tree.isempty
+%         str = tree.tree2str;
+%         newNumLines = numel(regexp(str,newline));
+%         numLines = numLines + newNumLines;
+%         if ismember(files{idx},filesInClosure)
+%             numLinesInClosure = numLinesInClosure + newNumLines;
+%         end
+%     end
+% end
 
 %% Local functions for running energy consumption experiments
 

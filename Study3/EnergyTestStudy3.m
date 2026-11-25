@@ -146,7 +146,7 @@ addpath(genpath(fullfile(rootFolder,'OverrideFunctions')))
 warning on
 
 load(fullfile(folderStudy3,'filesStudy3.mat'),'filesStudy3')
-files = fullfile(folderMinedProjects,filesStudy3.fileName);
+files = fullfile(folderOptimizedProjects,filesStudy3.fileName);
 erroringFiles = [];
 for idx = 1:numel(files)
     folder = getProjectFolder(files{idx});

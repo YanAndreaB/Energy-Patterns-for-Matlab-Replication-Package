@@ -204,6 +204,7 @@ for idx = 1:height(files)
     addpath(genpath(pathToEnergyTools))
     addpath(genpath(pathToMatlabTools))
     addpath(genpath(pathToGeneralMatlabFiles))
+    addpath(rootFolder) % without genpath
     % energy pattern paths
     addpath(genpath(fullfile(rootFolder,'HelpFunctions')))
     addpath(fullfile(rootFolder,'MatFiles'))

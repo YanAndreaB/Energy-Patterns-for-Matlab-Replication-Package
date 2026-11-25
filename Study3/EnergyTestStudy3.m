@@ -149,6 +149,11 @@ load(fullfile(folderStudy3,'filesStudy3.mat'),'filesStudy3')
 files = fullfile(folderOptimizedProjects,filesStudy3.fileName);
 erroringFiles = [];
 for idx = 1:numel(files)
+    folder = getProjectFolder(files{idx});
+    warning off
+    addpath(genpath(folder))
+    warning on
+
     try
         t0 = tic;
         runFile(files{idx},1)
@@ -161,6 +166,10 @@ for idx = 1:numel(files)
         erroringFiles = [erroringFiles,idx]; %#ok<AGROW>
     end
     filesStudy3.elapsedTime(idx) = t1;
+
+    warning off
+    rmpath(genpath(folder))
+    warning on
 end
 save(fullfile(folderStudy3,'filesStudy3.mat'),'filesStudy3')
 

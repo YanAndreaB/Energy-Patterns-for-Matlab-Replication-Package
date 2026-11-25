@@ -33,7 +33,7 @@ autoFixCheckIds = { ...
     'OR2', ...
     };
 
-%% 2. Optimize Files with Autofix option
+%% 2.a) Optimize Files with Autofix option
 % This section optimizes files that contain code issues that can be fixed
 % with the codeIssues.fix method. This procedure had to be re-iterated
 % three times. codeIssues.fix seems not to fix all issues in one go. In one
@@ -63,11 +63,12 @@ end
 
 save(fullfile(folderStudy3,'issues.mat'),'projectList','-append')
 
-%% 2.b) Loop through projects that have not been optimized in 5.
+%% 2.b) Loop through projects that have not been optimized in 2.a).
 % For some unknonw reason not all autofixable issues have been fixed under
 % step 5. To make sure that no auto-fixable issue remains, loop again
 % through projects that have unsolved issues.
-disp 'Loop through projects that have not been optimized in 5'
+% Repeat this step until counter stays zero.
+disp 'Loop through projects that have not been optimized in 2.a)'
 
 cd(folderOptimizedProjects)
 
@@ -142,13 +143,18 @@ disp 'Run files to estimate running time'
 
 load(fullfile(folderStudy3,'filesStudy3.mat'),'filesStudy3')
 files = fullfile(folderOptimizedProjects,filesStudy3.fileName);
+erroringFiles = [];
 for idx = 1:numel(files)
-    t0 = tic;
-    runFile(files{idx},1)
-    t1 = toc(t0);
+    try
+        t0 = tic;
+        runFile(files{idx},1)
+        t1 = toc(t0);
 
-    if t1 < 1
-        t1 = timeit(@()runFile(files{idx},1));
+        if t1 < 1
+            t1 = timeit(@()runFile(files{idx},1));
+        end
+    catch
+        erroringFiles = [erroringFiles,idx]; %#ok<AGROW>
     end
     filesStudy3.elapsedTime(idx) = t1;
 end

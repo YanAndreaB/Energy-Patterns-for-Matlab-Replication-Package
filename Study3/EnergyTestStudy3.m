@@ -189,6 +189,7 @@ rng default
 numFiles = height(files);
 order = randperm(numFiles,numFiles);
 files = files(order,:);
+files.fileName = fullfile(folderOptimizedProjects,files.fileName);
 
 elapsedTime = files.elapsedTime;
 erroringProjects = [];

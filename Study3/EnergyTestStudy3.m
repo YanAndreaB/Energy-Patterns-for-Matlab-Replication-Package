@@ -141,6 +141,10 @@ optimizedFilesList = files(fileList);
 %% 4. Run files to estimate running time
 disp 'Run files to estimate running time'
 
+warning off
+addpath(genpath(fullfile(rootFolder,'OverrideFunctions')))
+warning on
+
 load(fullfile(folderStudy3,'filesStudy3.mat'),'filesStudy3')
 files = fullfile(folderOptimizedProjects,filesStudy3.fileName);
 erroringFiles = [];

@@ -1,7 +1,7 @@
 %% EnergyTestStudy3
 
 %% 1. Set Folders
-disp 'Set Folders'
+disp '1. Set Folders'
 
 rootFolder = projectRoot;
 folderStudy3 = fullfile(rootFolder,'Study3');
@@ -41,7 +41,7 @@ autoFixCheckIds = { ...
 % For the next run oldProjectList gets the values of projectList and the
 % iteration is proceeded until the array projectList hasn't "shrunk" after
 % the run.
-disp 'Optimize Files with Autofix option'
+disp '2.a) Optimize Files with Autofix option'
 
 cd(folderOptimizedProjects)
 
@@ -68,7 +68,7 @@ save(fullfile(folderStudy3,'issues.mat'),'projectList','-append')
 % step 5. To make sure that no auto-fixable issue remains, loop again
 % through projects that have unsolved issues.
 % Repeat this step until counter stays zero.
-disp 'Loop through projects that have not been optimized in 2.a)'
+disp '2.b) Loop through projects that have not been optimized in 2.a)'
 
 cd(folderOptimizedProjects)
 
@@ -97,10 +97,10 @@ end
 % If search was successful, counter remains zero, no auto-fixable issue
 % remained.
 
-%% 3. a) Optimize Files (Preparation)
+%% 3.a) Optimize Files (Preparation)
 % This step is to optimize files with self-crafted automated fixes - with
 % the utility EnergyFileOptimizer.m
-disp 'Optimize Files (Preparation)'
+disp '3.a) Optimize Files (Preparation)'
 
 cd(folderOptimizedProjects)
 
@@ -112,7 +112,7 @@ fileList = [];
 failedFiles = {};
 
 %% 3.b) Optimize Files
-disp 'Optimize Files'
+disp '3.b) Optimize Files'
 
 for idx = startIdx:endIdx
 
@@ -139,7 +139,7 @@ end
 optimizedFilesList = files(fileList);
 
 %% 4. Run files to estimate running time
-disp 'Run files to estimate running time'
+disp '4. Run files to estimate running time'
 
 warning off
 addpath(genpath(fullfile(rootFolder,'OverrideFunctions')))
@@ -173,8 +173,8 @@ for idx = 1:numel(files)
 end
 save(fullfile(folderStudy3,'filesStudy3.mat'),'filesStudy3')
 
-%% 5. a) Run Energy Experiments (preparation)
-disp 'Run Energy Experiments (preparation)'
+%% 5.a) Run Energy Experiments (preparation)
+disp '5.a) Run Energy Experiments (preparation)'
 
 runningProjectFolder = fullfile(folderGithubProjects,'RunningProject');
 if ~isfolder(runningProjectFolder)
@@ -195,8 +195,8 @@ elapsedTime = files.elapsedTime;
 erroringProjects = [];
 errorMessages = {};
 
-%% 5. b) Loop through files
-disp 'Loop through files'
+%% 5.b) Loop through files
+disp '5.b) Loop through files'
 
 for idx = 1:height(files)
     % restore default path
@@ -266,7 +266,7 @@ disp 'Run script Study3CollectIssues'
 Study3CollectIssues
 
 %% 6. Save table as CSV
-disp 'Save table as CSV'
+disp '6. Save table as CSV'
 
 energyContentRow = '%d %s %s %s %0.2fJ %0.2fJ %0.2f%%';
 timeContentRow = '%d %s %s %s %0.2fs %0.2fs %0.2f%%';

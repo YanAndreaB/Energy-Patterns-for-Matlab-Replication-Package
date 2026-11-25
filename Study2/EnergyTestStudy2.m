@@ -1,7 +1,7 @@
 %% EnergyTestStudy2
 
 %% 1. Set Folders
-disp 'Set Folders'
+disp '1. Set Folders'
 
 rootFolder = projectRoot;
 
@@ -20,7 +20,7 @@ variableNames = {'Check-ID','Code-Snippet','Num_Files','Fraction','Recommendatio
 cd(folderStudy2)
 
 %% 2. Collect Total Issues
-disp 'Collect Total Issues'
+disp '2. Collect Total Issues'
 
 folders = dir2folderNames(folderMinedProjects)';
 
@@ -42,7 +42,7 @@ for idx = 1:numFolders
 end
 
 %% 3. Get Fixable Issues
-disp 'Get fixable Issues'
+disp '3. Get fixable Issues'
 
 autoFixCheckIds = { ...
     'AND2', ...
@@ -67,7 +67,7 @@ save(fullfile(folderStudy3,'issues.mat'),'fixableIssues')
 
 %% 4. Replace %#ok Annotations
 % This step is to unsuppress code analyzer warnings.
-disp 'Replace %#ok Annotations'
+disp '4. Replace %#ok Annotations'
 
 cd(fullfile(folderMinedProjects))
 
@@ -90,7 +90,7 @@ for idx = 1:numel(fileNames)
 end
 
 %% 5. Copy files to folder OptimizedGithubProjects
-disp 'Copy files to folder OptimizedGithubProjects'
+disp '5. Copy files to folder OptimizedGithubProjects'
 
 cd(folderGithubProjects)
 copyfile('MinedGithubProjects','OptimizedGithubProjects')
@@ -99,7 +99,7 @@ copyfile('MinedGithubProjects','OptimizedGithubProjects')
 % cp MinedGithubProjects OptimizedGithubProjects
 
 %% 6. Find patterns with checkcode
-disp 'Find patterns with checkcode'
+disp '6. Find patterns with checkcode'
 
 % The file diaryAllWarnings.txt is used to store all instances of code
 % analyzer warnings found in the files
@@ -136,7 +136,7 @@ end
 fclose(fileID);
 
 %% 7. Pattern Statistics
-disp 'Pattern Statistics'
+disp '7. Pattern Statistics'
 
 diaryFolder = fullfile(folderStudy2,'diaries');
 diaryName = fullfile(diaryFolder,'diaryAllWarnings.txt');
@@ -162,7 +162,7 @@ cd(folderStudy2)
 writetable(statTable.table,'Results_Study_2_Table_A.csv')
 
 %% 8. Files in Static Closure
-disp 'Files in Static Closure'
+disp '8. Files in Static Closure'
 
 % load files
 load(fullfile(folderStudy3,'filesStudy3.mat'),'filesStudy3')
@@ -192,7 +192,7 @@ filesInStaticClosure = unique(filesInStaticClosure);
 save(fullfile(folderStudy2,'filesInStaticClosure.mat'),'filesInStaticClosure')
 
 %% 9. Warnings in Static Closure
-disp 'Warnings in Static Closure'
+disp '9. Warnings in Static Closure'
 
 % load files
 load(fullfile(folderStudy2,'filesInStaticClosure.mat'),'filesInStaticClosure')
@@ -206,7 +206,7 @@ data.File = replace(data.File,'MinedGithubProjects','OptimizedGithubProjects');
 dataStaticClosure = data(ia,:);
 
 %% 10. Statistics of Static Closure
-disp 'Statistics of Static Closure'
+disp '10. Statistics of Static Closure'
 
 [patternNames,warningId,msg] = patternInfo;
 

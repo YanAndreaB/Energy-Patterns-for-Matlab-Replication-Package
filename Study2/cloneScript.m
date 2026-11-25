@@ -20,7 +20,7 @@ for idx = 1:height(rawData)
 
         cd(uniqueRepoName)
         system(['git config --global --add safe.directory ',fullfile(folderMinedProjects,uniqueRepoName)]);
-        system('sudo git reset --hard $(git rev-list -1 --before="2026-05-07" HEAD)')
+        system('sudo git reset --hard $(git rev-list -1 --before="2026-05-07" HEAD)');
     catch
         failedRepos = [failedRepos,idx]; %#ok<AGROW>
     end

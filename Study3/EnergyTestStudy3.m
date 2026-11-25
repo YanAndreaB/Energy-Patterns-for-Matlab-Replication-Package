@@ -235,8 +235,8 @@ for idx = 1:height(files)
     timeStamp = datetime;
     fprintf('Experiment %d: %s / %s\n',idx,project,timeStamp)
 
-    TestingClass = EnergyTestScript; % real measurement
-    % TestingClass = EnergyTestRun; % for testing purpose
+    % TestingClass = EnergyTestScript; % real measurement
+    TestingClass = EnergyTestRun; % for testing purpose
 
     TestingClass.prepareA = @()prepareProject(originalProject,folderGithubProjects);
     TestingClass.prepareB = @()prepareProject(optimizedProject,folderGithubProjects);

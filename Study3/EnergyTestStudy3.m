@@ -198,6 +198,7 @@ errorMessages = {};
 %% 5.b) Loop through files
 disp '5.b) Loop through files'
 
+isTest = true;
 for idx = 1:height(files)
     % restore default path
     restoredefaultpath
@@ -235,15 +236,19 @@ for idx = 1:height(files)
     timeStamp = datetime;
     fprintf('Experiment %d: %s / %s\n',idx,project,timeStamp)
 
-    % TestingClass = EnergyTestScript; % real measurement
-    TestingClass = EnergyTestRun; % for testing purpose
+    if isTest
+        TestingClass = EnergyTestRun; % for testing purpose
+        numRuns = 1;
+    else
+        TestingClass = EnergyTestScript; % real measurement
+        numRuns = ceil(4 / elapsedTime(idx)); % Aiming at a running time of total 2-4 seconds
+    end
 
     TestingClass.prepareA = @()prepareProject(originalProject,folderGithubProjects);
     TestingClass.prepareB = @()prepareProject(optimizedProject,folderGithubProjects);
     TestingClass.cleanUpA = @()cleanUpRunningProject(folderGithubProjects);
     TestingClass.cleanUpB = @()cleanUpRunningProject(folderGithubProjects);
 
-    numRuns = ceil(4 / elapsedTime(idx)); % Aiming at a running time of total 2-4 seconds
     TestingClass.benchmarkA = @()runFile(originalShortName,numRuns);
     TestingClass.benchmarkB = @()runFile(optimizedShortName,numRuns);
 

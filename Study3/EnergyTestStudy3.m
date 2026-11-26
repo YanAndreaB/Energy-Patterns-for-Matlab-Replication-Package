@@ -17,11 +17,11 @@ folderOptimizedProjects = fullfile(folderGithubProjects,'OptimizedGithubProjects
 load(fullfile(folderStudy3,'filesStudy3.mat'),'filesStudy3')
 projectNames = regexp(filesStudy3.fileName,'(?<=__).*?(?=/)','match','once');
 fileNames = regexp(filesStudy3.fileName,'(?<=/)[^/]*(?=$)','match','once');
-folderNames = cell(size(projectNames));
+matFileFolderNames = cell(size(projectNames));
 for idx = 1:numel(projectNames)
-    folderNames{idx} = [num2str(idx),'_',projectNames{idx}];
-    if ~isfolder(folderNames{idx})
-        mkdir(folderNames{idx})
+    matFileFolderNames{idx} = [num2str(idx),'_',projectNames{idx}];
+    if ~isfolder(matFileFolderNames{idx})
+        mkdir(matFileFolderNames{idx})
     end
 end
 
@@ -253,9 +253,11 @@ for idx = 1:height(files)
     TestingClass.benchmarkB = @()runFile(optimizedShortName,numRuns);
 
     TestingClass.fileDescription = fileDescription;
-    TestingClass.matFileFolder = fullfile(folderStudy3,folderNames{idx});
+    TestingClass.matFileFolder = fullfile(folderStudy3,matFileFolderNames{idx});
     try
+        warning off
         TestingClass.execute
+        warning on
     catch err
         errorMessages{end + 1} = err.message; %#ok<SAGROW>
         erroringProjects(end + 1) = idx; %#ok<SAGROW>
@@ -273,6 +275,7 @@ Study3CollectIssues
 %% 6. Save table as CSV
 disp '6. Save table as CSV'
 
+cd(folderStudy3)
 energyContentRow = '%d %s %s %s %0.2fJ %0.2fJ %0.2f%%';
 timeContentRow = '%d %s %s %s %0.2fs %0.2fs %0.2f%%';
 
@@ -282,16 +285,16 @@ checkId = {data.DetectedPatterns}';
 IDX = cellfun(@ischar,checkId);
 checkId(IDX) = cellfun(@(arg){arg},checkId(IDX),'UniformOutput',false);
 checkId = cellfun(@(outerArg1,outerArg2)strjoin(sort( ...
-    cellfun(@(arg,arg2)[arg,'~(',num2str(arg2),')'],outerArg1,num2cell(outerArg2),'UniformOutput',false)),', '), ...
+    cellfun(@(arg,arg2)[arg,'_(',num2str(arg2),')'],outerArg1,num2cell(outerArg2),'UniformOutput',false)),', '), ...
     checkId, patternCount, 'UniformOutput',false);
 
 newTable = cell(2 * height(filesStudy3),7);
 for idx = 1:height(filesStudy3)
-    res = dir(fullfile(folderNames{idx},'*processed.mat'));
+    res = dir(fullfile(matFileFolderNames{idx},'*processed.mat'));
     fileName = fullfile(res.folder,res.name);
     loadRes = load(fileName,'mean*_b','mean*_t','ratio_b','ratio_t');
     energyRow = sprintf(energyContentRow,idx,fileNames{idx},projectNames{idx},checkId{idx}, loadRes.mean1_b,loadRes.mean2_b,(1 - loadRes.ratio_b) * 100);
-    timeRow = sprintf(timeContentRow,idx,fileNames{idx},projectNames{idx},'check-id', loadRes.mean1_t,loadRes.mean2_t,(1 - loadRes.ratio_t) * 100);
+    timeRow = sprintf(timeContentRow,idx,fileNames{idx},projectNames{idx},checkId{idx}, loadRes.mean1_t,loadRes.mean2_t,(1 - loadRes.ratio_t) * 100);
     newTable(2 * idx - 1,:) = split(energyRow,' ');
     newTable(2 * idx,:) = split(timeRow,' ');
 end
@@ -299,7 +302,7 @@ newTable = cell2table(newTable);
 newTable.Properties.VariableNames = {'Row-Num','File_Name','Project_Name','Check-ID','Non-fixed_Recommendation','Fixed_Recommendation','Gain/Loss'};
 writetable(newTable,'ResultsStudy3.csv')
 
-% %% 7. a) Count number of script files (preparation)
+%% %% 7. a) Count number of script files (preparation)
 % load filesInStaticClosure.mat fileNames
 % 
 % cd(folderMinedProjects)

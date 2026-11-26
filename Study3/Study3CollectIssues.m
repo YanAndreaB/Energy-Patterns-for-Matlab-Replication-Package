@@ -7,7 +7,9 @@ rootFolder = projectRoot;
 folderStudy3 = fullfile(rootFolder,'Study3');
 cd(folderStudy3)
 
+warning off
 addpath(genpath(fullfile(rootFolder,'OverrideFunctions')))
+warning on
 
 projectFolder = 'GithubProjects';
 load(fullfile(folderStudy3,'filesStudy3.mat'),'filesStudy3')
@@ -70,6 +72,8 @@ for idx = 1:numFiles
     data(idx).DetectedPatterns = foundIssues;
     data(idx).PatternCount = histcounts(checkIds);
 end
+str = jsonencode(data);
+data = jsondecode(str);
 
 save(fullfile(folderStudy3,'collectedIssues.mat'),'data')
 
@@ -80,7 +84,9 @@ cd(folder)
 addpath(genpath(folder))
 
 try
+    warning off
     collection = dynamicClosure(functionName);
+    warning on
     calledFiles = collection.files;
     executedLines = collection.executedLines;
     successful = true;

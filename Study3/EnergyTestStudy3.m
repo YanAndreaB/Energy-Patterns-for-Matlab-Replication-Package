@@ -280,6 +280,11 @@ energyContentRow = '%d %s %s %s %0.2fJ %0.2fJ %0.2f%%';
 timeContentRow = '%d %s %s %s %0.2fs %0.2fs %0.2f%%';
 
 load(fullfile(folderStudy3,'collectedIssues.mat'),'data');
+IDX = cellfun(@isempty,{data.DetectedPatterns});
+data(IDX).DetectedPatterns = '';
+IDX = cellfun(@isempty,{data.PatternCount});
+data(IDX).PatternCount = 0;
+
 patternCount = {data.PatternCount}';
 checkId = {data.DetectedPatterns}';
 IDX = cellfun(@ischar,checkId);
@@ -291,6 +296,9 @@ checkId = cellfun(@(outerArg1,outerArg2)strjoin(sort( ...
 newTable = cell(2 * height(filesStudy3),7);
 for idx = 1:height(filesStudy3)
     res = dir(fullfile(matFileFolderNames{idx},'*processed.mat'));
+    if numel(res) > 1
+        error('Multiple result mat-files found.')
+    end
     fileName = fullfile(res.folder,res.name);
     loadRes = load(fileName,'mean*_b','mean*_t','ratio_b','ratio_t');
     energyRow = sprintf(energyContentRow,idx,fileNames{idx},projectNames{idx},checkId{idx}, loadRes.mean1_b,loadRes.mean2_b,(1 - loadRes.ratio_b) * 100);
